@@ -29,12 +29,9 @@ public class ProductDetails extends AppCompatActivity {
     private static final String URL = "http://settingneeds.com/settingneeds/public/api/user_info/all_product_details";
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-
     List<Value> valueList;
 
-    RequestQueue rq;
-
-    @Override
+      @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
@@ -43,14 +40,10 @@ public class ProductDetails extends AppCompatActivity {
     }
 
     private void initializationView() {
-        rq = Volley.newRequestQueue(this);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_id);
         mRecyclerView.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-
         valueList = new ArrayList<>();
 
         //sendRequest();
@@ -95,7 +88,8 @@ public class ProductDetails extends AppCompatActivity {
             }
         });
 
-        rq.add(jsonArrayRequest);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
 
     }
     private void getData() {
@@ -176,7 +170,8 @@ public class ProductDetails extends AppCompatActivity {
             }
         });
 
-        rq.add(stringRequest);
+         RequestQueue requestQueue = Volley.newRequestQueue(this);
+         requestQueue.add(stringRequest);
 
     }
 

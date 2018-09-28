@@ -1,6 +1,8 @@
 package com.example.amittpad.volleyexample.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.amittpad.volleyexample.GlideConnector;
+import com.example.amittpad.volleyexample.ImageDetails;
 import com.example.amittpad.volleyexample.R;
 import com.example.amittpad.volleyexample.pojo.Value;
 
@@ -17,11 +20,11 @@ import java.util.List;
 
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.ViewHolder> {
 
-    private Context context;
+    private Activity activity;
     private List<Value> valueList;
 
-    public CustomRecyclerAdapter(Context context, List valueList) {
-        this.context = context;
+    public CustomRecyclerAdapter(Activity activity, List<Value> valueList) {
+        this.activity = activity;
         this.valueList = valueList;
     }
 
@@ -33,18 +36,26 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.itemView.setTag(valueList.get(position));
 
-        Value value = valueList.get(position);
+        final Value value = valueList.get(position);
         holder.productName.setText(value.getProductName());
         holder.productDes.setText(value.getDescription());
         holder.productPrice.setText(value.getPrice());
-       // holder.productName.setText(value.getProductName());
-        String image = value.getImages().get(0);
-        GlideConnector.getInstance().loadImageDirectly(context, image, holder.productImg);
+        final String image = value.getImages().get(0);
+        GlideConnector.getInstance().loadImageDirectly(activity, image, holder.productImg);
 
-    }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, ImageDetails.class);
+                intent.putExtra("image_position", valueList.get(position).getImages().get(0));
+                activity.startActivity(intent);
+            }
+        });
+
+        }
 
     @Override
     public int getItemCount() {
@@ -59,7 +70,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         private final ImageView productImg;
 
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
 
             productName = (TextView) itemView.findViewById(R.id.product_name);
@@ -67,16 +78,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             productPrice = (TextView) itemView.findViewById(R.id.product_price);
             productImg = (ImageView) itemView.findViewById(R.id.product_image_id);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Value cpu = (Value) view.getTag();
-
-                   // Toast.makeText(view.getContext(), cpu.getPersonFirstName()+" "+cpu.getPersonLastName()+" is "+ cpu.getJobProfile(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
 
         }
     }
